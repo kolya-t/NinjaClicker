@@ -19,17 +19,16 @@ public class GameView extends SurfaceView {
     /** Объект класса для рисования */
     private GameManager gameLoopThread;
 
-    /** Координата движения картинки по x */
-    private int x = 0;
-
-    /** Скорость движения картинки по x */
-    private int xSpeed = 1;
+    /** Объект класса Sprite */
+    private Sprite sprite;
 
     /** Конструктор */
     public GameView(Context context) {
         super(context);
         gameLoopThread = new GameManager(this);
         holder = getHolder();
+
+        /** Рисуем все объекты и все все */
         holder.addCallback(new SurfaceHolder.Callback() {
             /** Создание области рисования */
             @Override
@@ -57,20 +56,14 @@ public class GameView extends SurfaceView {
                 }
             }
         });
-        bmp = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
+        bmp = BitmapFactory.decodeResource(getResources(), R.drawable.player);
+        sprite = new Sprite(this, bmp);
     }
 
     /** Рисуем картинку на черном фоне */
     @Override
     protected void onDraw(Canvas canvas) {
-        if (x == getWidth() - bmp.getWidth()) {
-            xSpeed = -1;
-        }
-        if (x == 0) {
-            xSpeed = 1;
-        }
-        x += xSpeed;
         canvas.drawColor(Color.BLACK);
-        canvas.drawBitmap(bmp, x, 10, null);
+        sprite.onDraw(canvas);
     }
 }
