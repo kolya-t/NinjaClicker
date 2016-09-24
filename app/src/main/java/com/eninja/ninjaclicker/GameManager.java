@@ -4,7 +4,6 @@ import android.graphics.Canvas;
 
 public class GameManager extends Thread {
 
-    private String unnamed;
 
     /** Кадров в секунду */
     static final long FPS = 10;
