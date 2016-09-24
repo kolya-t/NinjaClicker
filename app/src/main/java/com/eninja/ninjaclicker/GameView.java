@@ -8,19 +8,18 @@ import android.graphics.Color;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.util.ArrayList;
+
 public class GameView extends SurfaceView {
 
-    /** Загружаемая картинка */
-    private Bitmap bmp;
+    /** Список спрайтов */
+    private ArrayList<Sprite> sprites = new ArrayList<>();
 
     /** Поле рисования */
     private SurfaceHolder holder;
 
     /** Объект класса для рисования */
     private GameManager gameLoopThread;
-
-    /** Объект класса Sprite */
-    private Sprite sprite;
 
     /** Конструктор */
     public GameView(Context context) {
@@ -33,6 +32,7 @@ public class GameView extends SurfaceView {
             /** Создание области рисования */
             @Override
             public void surfaceCreated(SurfaceHolder surfaceHolder) {
+                createSprites();
                 gameLoopThread.setRunning(true);
                 gameLoopThread.start();
             }
@@ -56,14 +56,28 @@ public class GameView extends SurfaceView {
                 }
             }
         });
-        bmp = BitmapFactory.decodeResource(getResources(), R.drawable.player);
-        sprite = new Sprite(this, bmp);
     }
 
     /** Рисуем картинку на черном фоне */
     @Override
     protected void onDraw(Canvas canvas) {
         canvas.drawColor(Color.BLACK);
-        sprite.onDraw(canvas);
+        for (Sprite sprite : sprites) {
+            sprite.onDraw(canvas);
+        }
+    }
+
+    /** Метод создания спрайта */
+    private Sprite createSprite(int resource) {
+        Bitmap bmp = BitmapFactory.decodeResource(getResources(), resource);
+        return new Sprite(this, bmp);
+    }
+
+    private void createSprites() {
+        sprites.add(createSprite(R.drawable.player));
+        sprites.add(createSprite(R.drawable.player));
+        sprites.add(createSprite(R.drawable.player));
+        sprites.add(createSprite(R.drawable.player));
+        sprites.add(createSprite(R.drawable.player));
     }
 }
