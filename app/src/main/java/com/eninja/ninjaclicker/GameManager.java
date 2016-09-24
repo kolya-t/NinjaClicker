@@ -4,6 +4,8 @@ import android.graphics.Canvas;
 
 public class GameManager extends Thread {
 
+    private String unnamed;
+
     /** Кадров в секунду */
     static final long FPS = 10;
 
@@ -48,7 +50,7 @@ public class GameManager extends Thread {
                 if (sleepTime > 0) {
                     sleep(sleepTime);
                 } else {
-//                    sleep(10);
+                    sleep(10);
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
