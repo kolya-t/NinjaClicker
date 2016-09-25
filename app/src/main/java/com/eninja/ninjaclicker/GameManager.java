@@ -1,7 +1,6 @@
 package com.eninja.ninjaclicker;
 
 import android.graphics.Canvas;
-import android.provider.Settings;
 
 public class GameManager extends Thread {
 

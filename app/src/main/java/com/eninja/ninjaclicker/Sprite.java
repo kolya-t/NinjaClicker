@@ -79,6 +79,7 @@ public class Sprite {
         canvas.drawBitmap(bmp, src, dst, null);
     }
 
+    /** Возвращает номер текущей анимации для спрайта */
     private int getAnimationRow() {
         // direction 0 = up, 1 = left, 2 = down, 3 = right
         // animation 3 = up, 1 = left, 0 = down, 2 = right
@@ -86,5 +87,10 @@ public class Sprite {
         double dirDouble = Math.atan2(xSpeed, ySpeed) / (Math.PI / 2) + 2;
         int direction = (int) Math.round(dirDouble) % BMP_ROWS;
         return DIRECTION_TO_ANIMATION_MAP[direction];
+    }
+
+    /** Проверка столкновений */
+    public boolean isCollision(float x2, float y2) {
+        return x2 > x && x2 < x + width && y2 > y && y2 < y + height;
     }
 }

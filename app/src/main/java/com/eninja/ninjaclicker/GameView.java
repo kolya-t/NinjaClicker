@@ -5,10 +5,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class GameView extends SurfaceView {
 
@@ -20,6 +22,7 @@ public class GameView extends SurfaceView {
 
     /** Объект класса для рисования */
     private GameManager gameLoopThread;
+    private long lastClick;
 
     /** Конструктор */
     public GameView(Context context) {
@@ -58,6 +61,7 @@ public class GameView extends SurfaceView {
         });
     }
 
+    /** Передвижение всех объектов */
     protected void update() {
         for (Sprite sprite : sprites) {
             sprite.update();
@@ -79,11 +83,35 @@ public class GameView extends SurfaceView {
         return new Sprite(this, bmp);
     }
 
+    /** Создание спрайтов на игровом поле */
     private void createSprites() {
-        sprites.add(createSprite(R.drawable.player));
-        sprites.add(createSprite(R.drawable.player));
-        sprites.add(createSprite(R.drawable.player));
-        sprites.add(createSprite(R.drawable.player));
-        sprites.add(createSprite(R.drawable.player));
+        for (int i = 0; i < 10; i++) {
+            sprites.add(createSprite(R.drawable.player));
+        }
+    }
+
+    /** Обработка касания по экрану */
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (System.currentTimeMillis() - lastClick > 300) {
+            lastClick = System.currentTimeMillis();
+
+            // Точка касания
+            float x = event.getX();
+            float y = event.getY();
+
+            synchronized (getHolder()) {
+                Iterator<Sprite> iterator = sprites.iterator();
+                while (iterator.hasNext()) {
+                    Sprite sprite = iterator.next();
+                    if (sprite.isCollision(x, y)) {
+                        iterator.remove();
+                        break; // удаляется только один персонаж под пальцем
+                    }
+                }
+            }
+
+        }
+        return true;
     }
 }
