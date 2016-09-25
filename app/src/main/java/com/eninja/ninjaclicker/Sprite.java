@@ -3,7 +3,6 @@ package com.eninja.ninjaclicker;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
-import android.util.Log;
 
 import java.util.Random;
 
@@ -56,7 +55,7 @@ public class Sprite {
     }
 
     /** Передвижение объекта */
-    private void update() {
+    protected void update() {
         if (x > view.getWidth() - width - xSpeed || x + xSpeed < 0) {
             xSpeed = -xSpeed;
         }
@@ -72,7 +71,7 @@ public class Sprite {
 
     /** Отрисовка спрайтов */
     public void onDraw(Canvas canvas) {
-        update();
+//        update();
         int srcX = currentFrame * width;
         int srcY = getAnimationRow() * height;
         Rect src = new Rect(srcX, srcY, srcX + width, srcY + height);

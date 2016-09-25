@@ -58,6 +58,12 @@ public class GameView extends SurfaceView {
         });
     }
 
+    protected void update() {
+        for (Sprite sprite : sprites) {
+            sprite.update();
+        }
+    }
+
     /** Рисуем картинку на черном фоне */
     @Override
     protected void onDraw(Canvas canvas) {

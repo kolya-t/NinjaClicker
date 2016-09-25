@@ -1,11 +1,15 @@
 package com.eninja.ninjaclicker;
 
 import android.graphics.Canvas;
+import android.provider.Settings;
 
 public class GameManager extends Thread {
 
+    /** Скорость игры */
+    static final double GAME_SPEED = 1.5;
+
     /** Кадров в секунду */
-    static final long FPS = 10;
+    static final long FPS = 60;
 
     /** Обект класса */
     private GameView view;
@@ -26,30 +30,28 @@ public class GameManager extends Thread {
     /** Действия, выполняемые в потоке */
     @Override
     public void run() {
-        long ticksPS = 1000 / FPS;
-        long startTime;
-        long sleepTime;
+        double ticksPS = 1000f / FPS;
+        long sleepTime = (long) (100 / GAME_SPEED);
+        long startTime = System.currentTimeMillis();
         while (running) {
             Canvas canvas = null;
-            startTime = System.currentTimeMillis();
-            try {
-                canvas = view.getHolder().lockCanvas();
-                synchronized (view.getHolder()) {
-                    view.onDraw(canvas);
+            view.update();
+            if (System.currentTimeMillis() - startTime >= ticksPS) {
+                try {
+                    canvas = view.getHolder().lockCanvas();
+                    synchronized (view.getHolder()) {
+                        view.onDraw(canvas);
+                    }
+                } finally {
+                    if (canvas != null) {
+                        view.getHolder().unlockCanvasAndPost(canvas);
+                    }
                 }
-            } finally {
-                if (canvas != null) {
-                    view.getHolder().unlockCanvasAndPost(canvas);
-                }
+                startTime = System.currentTimeMillis();
             }
 
-            sleepTime = ticksPS - (System.currentTimeMillis() - startTime);
             try {
-                if (sleepTime > 0) {
-                    sleep(sleepTime);
-                } else {
-                    sleep(10);
-                }
+                sleep(sleepTime);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
