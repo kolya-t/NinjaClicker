@@ -21,6 +21,7 @@ public class Player {
 
     private int height;
 
+    /** Конструктор */
     public Player(GameView view, Bitmap bmp) {
         this.view = view;
         this.bmp = bmp;
@@ -30,10 +31,13 @@ public class Player {
         this.y = (view.getHeight() - height) / 2;
     }
 
+    /** Обновление положения игрока
+     * (он не двигается) */
     protected void update() {
         // nothing
     }
 
+     /** Отрисовка игрока */
     protected void onDraw(Canvas canvas) {
         canvas.drawBitmap(bmp, x, y, null);
     }

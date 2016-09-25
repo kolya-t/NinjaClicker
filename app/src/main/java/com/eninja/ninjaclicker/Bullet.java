@@ -23,9 +23,9 @@ public class Bullet {
     private double angle;
 
     /** Размеры пули */
-    private int width;
+    public int width;
 
-    private int height;
+    public int height;
 
     /** Конструктор */
     public Bullet(GameView view, Bitmap bmp) {
@@ -38,11 +38,13 @@ public class Bullet {
         this.angle = Math.atan((double) (y - view.shotY) / (x - view.shotX));
     }
 
+    /** Обновление координат пули */
     protected void update() {
         x += speed * Math.cos(angle);
         y += speed * Math.sin(angle);
     }
 
+    /** Отрисовка пули */
     protected void onDraw(Canvas canvas) {
         canvas.drawBitmap(bmp, x, y, null);
     }

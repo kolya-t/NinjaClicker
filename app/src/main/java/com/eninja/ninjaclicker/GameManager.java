@@ -35,6 +35,7 @@ public class GameManager extends Thread {
         while (running) {
             Canvas canvas = null;
             view.update();
+            view.testCollisions();
             if (System.currentTimeMillis() - startTime >= ticksPS) {
                 try {
                     canvas = view.getHolder().lockCanvas();
