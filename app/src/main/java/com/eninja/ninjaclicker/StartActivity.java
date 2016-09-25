@@ -12,7 +12,7 @@ import android.widget.ImageView;
 public class StartActivity extends Activity implements View.OnClickListener {
 
     private static final int STOPSPLASH = 0;
-    private static final long SPLASHTIME = 5000; // время показа сплэш-картинки
+    private static final long SPLASHTIME = 3000; // время показа сплэш-картинки
     private ImageView splashscreen;
 
     private Handler splashHandler = new Handler() { // создаем новый хэндлер

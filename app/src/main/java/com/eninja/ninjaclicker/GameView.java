@@ -14,15 +14,28 @@ import java.util.Iterator;
 
 public class GameView extends SurfaceView {
 
-    /** Список спрайтов */
-    private ArrayList<Sprite> sprites = new ArrayList<>();
+    /** Спрайты */
+    private Player player;
+
+    private ArrayList<Enemy> enemies = new ArrayList<>();
+
+    private ArrayList<Bullet> bullets = new ArrayList<>();
 
     /** Поле рисования */
     private SurfaceHolder holder;
 
     /** Объект класса для рисования */
     private GameManager gameLoopThread;
+
+    /** Когда был сделан последний клик */
     private long lastClick;
+
+    /** Промежуток между кликами. Кикать не чаще чем указано */
+    private static final long CLICK_DELAY = 100;
+
+    public int shotX;
+
+    public int shotY;
 
     /** Конструктор */
     public GameView(Context context) {
@@ -59,58 +72,70 @@ public class GameView extends SurfaceView {
                 }
             }
         });
+//        player = new Player(this, BitmapFactory.decodeResource(getResources(), R.drawable.ninja));
     }
 
     /** Передвижение всех объектов */
     protected void update() {
-        for (Sprite sprite : sprites) {
-            sprite.update();
+        player.update();
+
+        for (Enemy enemy : enemies) {
+            enemy.update();
+            // TODO: 025 25.09.16 Collisions
+        }
+
+        Iterator<Bullet> iterator = bullets.iterator();
+        while (iterator.hasNext()) {
+            Bullet bullet = iterator.next();
+            bullet.update();
+            if (bullet.x < 0 || bullet.x > getWidth() || bullet.y < 0 || bullet.y > getHeight()) {
+                iterator.remove();
+            }
         }
     }
 
     /** Рисуем картинку на черном фоне */
     @Override
     protected void onDraw(Canvas canvas) {
-        canvas.drawColor(Color.BLACK);
-        for (Sprite sprite : sprites) {
-            sprite.onDraw(canvas);
-        }
-    }
+        canvas.drawColor(Color.WHITE);
 
-    /** Метод создания спрайта */
-    private Sprite createSprite(int resource) {
-        Bitmap bmp = BitmapFactory.decodeResource(getResources(), resource);
-        return new Sprite(this, bmp);
+        player.onDraw(canvas);
+
+        for (Enemy enemy : enemies) {
+            enemy.onDraw(canvas);
+        }
+
+        for (Bullet bullet : bullets) {
+            bullet.onDraw(canvas);
+        }
     }
 
     /** Создание спрайтов на игровом поле */
     private void createSprites() {
-        for (int i = 0; i < 10; i++) {
-            sprites.add(createSprite(R.drawable.player));
-        }
+        player = new Player(this, BitmapFactory.decodeResource(getResources(), R.drawable.ninja));
+    }
+
+    /** Создание пули */
+    private Bullet createBullet(int resource) {
+        Bitmap bmp = BitmapFactory.decodeResource(getResources(), resource);
+        return new Bullet(this, bmp);
     }
 
     /** Обработка касания по экрану */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (System.currentTimeMillis() - lastClick > 300) {
+        if (System.currentTimeMillis() - lastClick > CLICK_DELAY) {
             lastClick = System.currentTimeMillis();
 
-            // Точка касания
-            float x = event.getX();
-            float y = event.getY();
-
             synchronized (getHolder()) {
-                Iterator<Sprite> iterator = sprites.iterator();
-                while (iterator.hasNext()) {
-                    Sprite sprite = iterator.next();
-                    if (sprite.isCollision(x, y)) {
-                        iterator.remove();
-                        break; // удаляется только один персонаж под пальцем
-                    }
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    // Точка касания
+                    shotX = (int) event.getX();
+                    shotY = (int) event.getY();
+
+                    bullets.add(createBullet(R.drawable.bullet));
                 }
             }
-
         }
         return true;
     }
